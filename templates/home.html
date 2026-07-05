@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FWI Prediction</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🔥 Fire Weather Index Prediction</h1>
+        <p class="subtitle">
+            Enter the required environmental parameters to predict the Fire Weather Index.
+        </p>
+
+        <form action="{{ url_for('predict_datapoint') }}" method="POST">
+
+            <div class="form-group">
+                <input type="number" step="any" name="Temperature" placeholder="Temperature" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="RH" placeholder="Relative Humidity (RH)" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="Ws" placeholder="Wind Speed (Ws)" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="Rain" placeholder="Rainfall" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="FFMC" placeholder="FFMC" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="DMC" placeholder="DMC" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="DC" placeholder="DC" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="ISI" placeholder="ISI" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="Classes" placeholder="Class (0 or 1)" required>
+            </div>
+
+            <div class="form-group">
+                <input type="number" step="any" name="Region" placeholder="Region (0 or 1)" required>
+            </div>
+
+            <button type="submit" class="predict-btn">
+                Predict
+            </button>
+
+        </form>
+
+        {% if results %}
+        <div class="result">
+            <h2>Prediction Result</h2>
+            <p>{{ results }}</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
