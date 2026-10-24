@@ -1,12 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>MODEL1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10251f">
+    <title>Wildfire Outlook — Fire Weather Index</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-<h1> Welcome to Homepage</h1>
+<body class="landing-page">
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <header class="site-header wrap">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Wildfire Outlook home">
+            <span class="brand-mark" aria-hidden="true"><span></span></span>
+            <span>field<span class="brand-light">note</span></span>
+        </a>
+        <nav class="top-nav" aria-label="Main navigation">
+            <a href="#how-it-works">How it works</a>
+            <a class="nav-cta" href="{{ url_for('predict_datapoint') }}">Open predictor <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
 
+    <main>
+        <section class="hero wrap">
+            <div class="hero-copy">
+                <div class="eyebrow"><span class="status-dot"></span> FIELD CONDITIONS · ALGERIA</div>
+                <h1>A clearer read on<br><span>fire weather.</span></h1>
+                <p class="hero-description">Turn today’s weather and fuel conditions into a Fire Weather Index estimate. A practical signal for understanding how readily a fire could start and spread.</p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="{{ url_for('predict_datapoint') }}">Estimate fire risk <span aria-hidden="true">→</span></a>
+                    <span class="action-note">10 field measurements · one estimate</span>
+                </div>
+                <div class="hero-meta">
+                    <div class="meta-icon" aria-hidden="true">◎</div>
+                    <div><strong>Fire Weather Index</strong><span>Based on local weather and fire-fuel indicators</span></div>
+                </div>
+            </div>
 
+            <div class="hero-art" aria-label="Illustration of a forest landscape at dusk">
+                <div class="art-sky"><div class="sun"></div><div class="sky-grain"></div></div>
+                <div class="art-haze"></div>
+                <div class="mountain mountain-back"></div>
+                <div class="mountain mountain-mid"></div>
+                <div class="mountain mountain-front"></div>
+                <div class="tree-line tree-line-back" aria-hidden="true">♠　♠　♠　♠　♠　♠　♠　♠</div>
+                <div class="tree-line tree-line-front" aria-hidden="true">♠　♠　♠　♠　♠　♠　♠</div>
+                <div class="art-caption"><span class="caption-mark"></span><span>Observe conditions<br><strong>before they change</strong></span><span class="caption-coordinates">36° 45′ N<br>5° 04′ E</span></div>
+                <div class="art-label"><span class="label-dot"></span> LANDSCAPE MONITORING</div>
+            </div>
+        </section>
+
+        <section class="info-strip wrap" id="how-it-works">
+            <div class="strip-intro"><span class="strip-number">01 / 03</span><strong>From conditions<br>to context.</strong></div>
+            <div class="strip-item"><span class="strip-icon">↗</span><div><strong>Weather inputs</strong><p>Temperature, humidity, wind and recent rainfall.</p></div></div>
+            <div class="strip-item"><span class="strip-icon">⌁</span><div><strong>Fuel indicators</strong><p>Fine and deeper fuel dryness measurements.</p></div></div>
+            <div class="strip-item"><span class="strip-icon">◉</span><div><strong>Model estimate</strong><p>A Fire Weather Index value, ready to interpret.</p></div></div>
+        </section>
+        <p class="disclaimer wrap">An educational estimate based on a trained machine-learning model. It is not an official warning or a substitute for local fire authorities.</p>
+    </main>
 </body>
 </html>

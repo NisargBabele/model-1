@@ -1,77 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FWI Prediction</title>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10251f">
+    <title>Fire Weather Estimate — fieldnote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+<body class="predict-page">
+    <header class="site-header wrap">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Wildfire Outlook home">
+            <span class="brand-mark" aria-hidden="true"><span></span></span>
+            <span>field<span class="brand-light">note</span></span>
+        </a>
+        <nav class="top-nav" aria-label="Main navigation">
+            <span class="nav-context"><span class="status-dot"></span> FIRE WEATHER INDEX</span>
+            <a class="nav-cta" href="{{ url_for('index') }}">← Back to overview</a>
+        </nav>
+    </header>
 
-<body>
+    <main class="predict-layout wrap">
+        <section class="form-intro">
+            <div class="eyebrow"><span class="status-dot"></span> ALGERIAN FOREST CONDITIONS</div>
+            <h1>Set the scene.<br><span>Read the risk.</span></h1>
+            <p>Enter current observations to estimate the Fire Weather Index. Use measurements from the same location and time for the most useful result.</p>
+            <div class="form-side-note">
+                <span class="note-icon" aria-hidden="true">i</span>
+                <div><strong>What is the FWI?</strong><p>A numerical indicator of potential fire intensity, calculated from weather and fuel dryness.</p></div>
+            </div>
+            <div class="side-foot"><span class="side-rule"></span> MODEL · RIDGE REGRESSION <span class="side-rule"></span></div>
+        </section>
 
-    <div class="container">
-
-        <h1>🔥 Fire Weather Index Prediction</h1>
-        <p class="subtitle">
-            Enter the required environmental parameters to predict the Fire Weather Index.
-        </p>
-
-        <form action="{{ url_for('predict_datapoint') }}" method="POST">
-
-            <div class="form-group">
-                <input type="number" step="any" name="Temperature" placeholder="Temperature" required>
+        <section class="form-panel" aria-labelledby="form-title">
+            <div class="panel-heading">
+                <div><span class="panel-kicker">CONDITIONS INPUT</span><h2 id="form-title">Environmental readings</h2></div>
+                <span class="required-note"><span>*</span> Required</span>
             </div>
 
-            <div class="form-group">
-                <input type="number" step="any" name="RH" placeholder="Relative Humidity (RH)" required>
+            <form action="{{ url_for('predict_datapoint') }}" method="POST" class="prediction-form">
+                <div class="input-section">
+                    <div class="section-heading"><span class="section-index">01</span><div><h3>Weather</h3><p>Current atmospheric conditions</p></div></div>
+                    <div class="field-grid">
+                        <label class="field"><span>Temperature <em>°C</em></span><input type="number" step="any" name="Temperature" placeholder="e.g. 32" required aria-label="Temperature in degrees Celsius"></label>
+                        <label class="field"><span>Relative humidity <em>%</em></span><input type="number" step="any" name="RH" placeholder="e.g. 60" required aria-label="Relative humidity percentage"></label>
+                        <label class="field"><span>Wind speed <em>km/h</em></span><input type="number" step="any" name="Ws" placeholder="e.g. 15" required aria-label="Wind speed in kilometers per hour"></label>
+                        <label class="field"><span>Rainfall <em>mm</em></span><input type="number" step="any" name="Rain" placeholder="e.g. 0.0" required aria-label="Rainfall in millimeters"></label>
+                    </div>
+                </div>
+
+                <div class="input-section fuel-section">
+                    <div class="section-heading"><span class="section-index">02</span><div><h3>Fuel dryness</h3><p>Fire-weather component readings</p></div></div>
+                    <div class="field-grid">
+                        <label class="field"><span>Fine Fuel Moisture Code <em>FFMC</em></span><input type="number" step="any" name="FFMC" placeholder="e.g. 83.5" required></label>
+                        <label class="field"><span>Duff Moisture Code <em>DMC</em></span><input type="number" step="any" name="DMC" placeholder="e.g. 14.0" required></label>
+                        <label class="field"><span>Drought Code <em>DC</em></span><input type="number" step="any" name="DC" placeholder="e.g. 49.0" required></label>
+                        <label class="field"><span>Initial Spread Index <em>ISI</em></span><input type="number" step="any" name="ISI" placeholder="e.g. 5.1" required></label>
+                    </div>
+                </div>
+
+                <div class="input-section context-section">
+                    <div class="section-heading"><span class="section-index">03</span><div><h3>Location context</h3><p>Classification and study region</p></div></div>
+                    <div class="field-grid context-grid">
+                        <label class="field"><span>Fire class</span><select name="Classes" required><option value="" disabled selected>Select observed class</option><option value="0">Not fire</option><option value="1">Fire</option></select></label>
+                        <label class="field"><span>Study region</span><select name="Region" required><option value="" disabled selected>Select region</option><option value="0">Bejaia</option><option value="1">Sidi Bel-Abbes</option></select></label>
+                    </div>
+                </div>
+
+                <button type="submit" class="button button-primary submit-button">Calculate FWI estimate <span aria-hidden="true">→</span></button>
+                <p class="form-footnote"><span aria-hidden="true">⌁</span> Your readings are used only to calculate this estimate.</p>
+            </form>
+        </section>
+
+        {% if results is not none and results is defined %}
+        {% set fwi = results|float %}
+        <section class="result-panel" aria-live="polite" aria-labelledby="result-title">
+            <div class="result-topline"><span class="result-symbol" aria-hidden="true">↗</span><span>MODEL OUTPUT</span><span class="result-line"></span><span class="result-status">ESTIMATE READY</span></div>
+            <div class="result-content">
+                <div><h2 id="result-title">Your Fire Weather Index estimate</h2><p>A higher value indicates greater potential fire intensity.</p></div>
+                <div class="result-value">{{ '%.2f'|format(fwi) }}<span>FWI</span></div>
             </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="Ws" placeholder="Wind Speed (Ws)" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="Rain" placeholder="Rainfall" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="FFMC" placeholder="FFMC" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="DMC" placeholder="DMC" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="DC" placeholder="DC" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="ISI" placeholder="ISI" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="Classes" placeholder="Class (0 or 1)" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" step="any" name="Region" placeholder="Region (0 or 1)" required>
-            </div>
-
-            <button type="submit" class="predict-btn">
-                Predict
-            </button>
-
-        </form>
-
-        {% if results %}
-        <div class="result">
-            <h2>Prediction Result</h2>
-            <p>{{ results }}</p>
-        </div>
+            {% if fwi < 5 %}{% set band = 'Low' %}{% set band_class = 'low' %}{% elif fwi < 10 %}{% set band = 'Moderate' %}{% set band_class = 'moderate' %}{% elif fwi < 20 %}{% set band = 'High' %}{% set band_class = 'high' %}{% else %}{% set band = 'Very high' %}{% set band_class = 'very-high' %}{% endif %}
+            <div class="result-scale"><div class="scale-track"><span class="scale-marker {{ band_class }}"></span></div><div class="scale-labels"><span>LOW</span><span>MODERATE</span><span>HIGH</span><span>VERY HIGH</span></div><div class="result-band {{ band_class }}"><span></span>{{ band }} estimated index band</div></div>
+            <a class="try-again" href="{{ url_for('predict_datapoint') }}">Update conditions <span aria-hidden="true">↗</span></a>
+        </section>
         {% endif %}
-
-    </div>
-
+    </main>
+    <footer class="page-footer wrap"><span>FIELDNOTE · FIRE WEATHER INDEX</span><span>For educational use · Follow local guidance</span></footer>
 </body>
 </html>
