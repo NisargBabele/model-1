@@ -1,13 +1,15 @@
 from flask import Flask,request,jsonify,render_template
 import pickle
+from pathlib import Path
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
 
 ## import rifge regressor and standard scaler pickle
 
-ridge_model=pickle.load(open('models/ridge.pkl','rb'))
-scaler=pickle.load(open('models/scaler.pkl','rb'))
+MODEL_DIR = Path(__file__).resolve().parent / 'models'
+with (MODEL_DIR / 'ridge.pkl').open('rb') as model_file:
+    ridge_model = pickle.load(model_file)
+with (MODEL_DIR / 'scaler.pkl').open('rb') as scaler_file:
+    scaler = pickle.load(scaler_file)
 print(scaler.n_features_in_)
 print(scaler.feature_names_in_)
 
